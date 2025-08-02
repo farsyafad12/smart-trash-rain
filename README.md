@@ -30,20 +30,20 @@ Meningkatkan efisiensi pemilahan sampah di tahap awal dengan sistem otomatis, co
 
 | Komponen      | Pin ESP32 |
 |---------------|-----------|
-| Infrared Sensor | D32 |
-| Rain Sensor     | D33 |
-| Servo Motor     | D25 |
-| LED Merah       | D16 |
-| LED Kuning      | D17 |
-| LED Hijau       | D18 |
-| Buzzer          | D19 |
+| Infrared Sensor | D33 |
+| Rain Sensor     | D32 |
+| Servo Motor     | D26 |
+| LED Merah       | D27 |
+| LED Kuning      | D14 |
+| LED Hijau       | D12 |
+| Buzzer          | D25 |
 
 ---
 
 ## ⚙️ Cara Kerja Sistem
 
 1. **Standby Mode**  
-   - LED merah menyala menandakan sistem siap mendeteksi.
+   - LED Hijau menyala menandakan sistem siap mendeteksi.
 
 2. **Deteksi Sampah Masuk**  
    - Infrared sensor mendeteksi keberadaan sampah.
@@ -57,43 +57,41 @@ Meningkatkan efisiensi pemilahan sampah di tahap awal dengan sistem otomatis, co
    - Jika tidak basah → servo bergerak ke kanan (posisi 135°).
 
 5. **Notifikasi Selesai**  
-   - LED hijau menyala.
+   - LED Merah menyala.
    - Buzzer berbunyi singkat sebagai tanda proses selesai.
 
 6. **Reset Posisi**  
    - Servo kembali ke posisi tengah (90°).
-   - LED kembali ke merah (standby).
+   - LED kembali ke Hijau (standby).
 
 ---
 
 ## 📸 Sketsa Rangkaian
 
-![Ilustrasi Rangkaian](image/1.png)
+![Ilustrasi Rangkaian 1](image/1.png)
+![Ilustrasi Rangkaian 2](image/2.png)
 
 ---
 
 ## 👨‍💻 Source Code
 
 > File kode lengkap bisa kamu buka di `code.ino`  
-> Jangan lupa install library `Servo.h` di Arduino IDE.
+> Jangan lupa install library `ESP32Servo.h` di Arduino IDE.
+> Dan jika perangkat kamu belum support board esp32, silahkan tonton tutorial pada link [Berikut](https://www.youtube.com/watch?v=h-jqF8Y5iV4)
+
 
 ---
 
 ## 📢 Catatan Tambahan
-- Gunakan **power supply 5V eksternal** untuk servo agar tidak drop.
 - Sensor IR biasanya aktif saat **LOW** (logika terbalik).
-- Pastikan sensor rain tidak terkena air berlebihan agar awet.
+- Pastikan sensor rain tidak terkena air berlebihan / terendam lama agar awet.
 
 ---
 
-## 🤝 Kontribusi
-Feel free buat modifikasi sistem ini jadi lebih advance! Bisa ditambah fitur:
-- Kirim notifikasi ke Telegram
-- Monitoring via web dashboard
-- Deteksi 3 jenis sampah atau lebih
+## 🤖 Rekomendasi Fitur Tambahan
+- Project ini bisa dikembangkan agar ada wifi untuk penggunaan lebih kompleks
+- Bisa juga di hubungkan dengan bot telegram Sebagai Database / Informasi
+- Bisa dikembangkan menggunakan komponen lainnya untuk kontrol penuh fitur
 
----
-
-## 💡 License
-Proyek ini bersifat open-source untuk edukasi dan eksperimen.
+<i>Powered By FarSyaFad Tech 2025 | All Right Reserved | Created By Ahnaf Samih</i>
 

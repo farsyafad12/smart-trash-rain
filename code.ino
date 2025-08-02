@@ -1,4 +1,4 @@
-#include <Servo.h>
+#include <ESP32Servo.h>
 
 // Pin Setup
 const int irSensorPin = 33;
@@ -22,53 +22,63 @@ void setup() {
   pinMode(redLed, OUTPUT);
   pinMode(yellowLed, OUTPUT);
   pinMode(greenLed, OUTPUT);
-
   pinMode(buzzerPin, OUTPUT);
 
   pemilah.attach(servoPin);
 
-  // Awal status
-  digitalWrite(redLed, HIGH);
+  digitalWrite(redLed, LOW);
   digitalWrite(yellowLed, LOW);
-  digitalWrite(greenLed, LOW);
-  pemilah.write(90); // posisi netral
+  digitalWrite(greenLed, HIGH);
+  pemilah.write(90);
 }
 
 void loop() {
-  bool adaSampah = digitalRead(irSensorPin) == LOW; // LOW artinya ada benda
+  bool adaSampah = digitalRead(irSensorPin) == LOW;
+
   if (adaSampah) {
-    Serial.println("Sampah Terdeteksi!");
-    
-    // Lampu kuning nyala
+    Serial.println("Sampah Terdeteksi! Memverifikasi...");
+
     digitalWrite(redLed, LOW);
     digitalWrite(yellowLed, HIGH);
+    digitalWrite(greenLed, LOW);
 
-    delay(500); // jeda proses deteksi
+    unsigned long startTime = millis();
+    bool tetapAdaSampah = true;
 
-    bool sampahBasah = digitalRead(rainSensorPin) == LOW; // LOW = Basah
-
-    if (sampahBasah) {
-      Serial.println("Sampah Basah");
-      pemilah.write(45); // putar kiri
-    } else {
-      Serial.println("Sampah Tidak Basah");
-      pemilah.write(135); // putar kanan
+    while (millis() - startTime < 1500) {
+      if (digitalRead(irSensorPin) == HIGH) {
+        tetapAdaSampah = false;
+        Serial.println("Sampah hilang sebelum waktunya, dibatalkan.");
+        break;
+      }
+      delay(10);
     }
 
-    // Lampu hijau nyala
+    if (tetapAdaSampah) {
+      bool sampahBasah = digitalRead(rainSensorPin) == LOW;
+
+      if (sampahBasah) {
+        Serial.println("Sampah Basah");
+        pemilah.write(40);
+      } else {
+        Serial.println("Sampah Tidak Basah");
+        pemilah.write(135);
+      }
+
+      digitalWrite(redLed, HIGH);
+      digitalWrite(yellowLed, LOW);
+      digitalWrite(greenLed, LOW);
+
+      digitalWrite(buzzerPin, HIGH);
+      delay(2500);
+      digitalWrite(buzzerPin, LOW);
+      pemilah.write(90);
+    }
+  } else {
+    digitalWrite(redLed, LOW);
     digitalWrite(yellowLed, LOW);
     digitalWrite(greenLed, HIGH);
-
-    // Buzzer bunyi sebentar
-    digitalWrite(buzzerPin, HIGH);
-    delay(500);
-    digitalWrite(buzzerPin, LOW);
-
-    delay(2000); // tunggu sebelum reset
-    pemilah.write(90); // kembali ke tengah
-
-    digitalWrite(greenLed, LOW);
-    digitalWrite(redLed, HIGH);
+    pemilah.write(90);
   }
 
   delay(100);
